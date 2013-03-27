@@ -1,0 +1,65 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 10
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 10.22 view script
+ * 
+ * @package    Application
+ */
+
+?>
+<div class="row">
+<div class="span9">
+<h1>Listing 10.22</h1>
+<h3>Ausgabe von Pizzadaten mit Doctrine 2</h3>
+<pre>
+&lt;?php
+use Doctrine\Orm\EntityManager;
+use Zend\Debug\Debug;
+
+$serviceManager = $this-&gt;getHelperPluginManager()-&gt;getServiceLocator();
+$entityManager  = $serviceManager-&gt;get('doctrine.entitymanager.orm_default');
+
+$pizzas    = $entityManager->getRepository('Pizza\Doctrine\PizzaEntity');
+$pizzaRow  = $pizzas-&gt;find(2)-&gt;getArrayCopy();
+$pizzaList = $pizzas-&gt;findAll();
+
+Debug::dump($pizzaRow, '&lt;h4&gt;einzelner Datensatz&lt;/h4&gt;');
+
+foreach ($pizzaList as $key =&gt; $pizzaRow) {
+    $title = '&lt;h4&gt;Datensatz ' . ($key + 1) . ' aus Liste&lt;/h4&gt;';
+    Debug::dump($pizzaRow-&gt;getArrayCopy(), $title);
+}
+</pre>
+<h3>Ausgabe</h3>
+<?php 
+use Doctrine\Orm\EntityManager;
+use Zend\Debug\Debug;
+
+$serviceManager = $this->getHelperPluginManager()->getServiceLocator();
+$entityManager  = $serviceManager->get('doctrine.entitymanager.orm_default'); /* @var $entityManager EntityManager */
+
+$pizzas    = $entityManager->getRepository('Pizza\Doctrine\PizzaEntity');
+$pizzaRow  = $pizzas->find(2)->getArrayCopy();
+$pizzaList = $pizzas->findAll();
+
+Debug::dump($pizzaRow, '<h4>einzelner Datensatz</h4>');
+
+foreach ($pizzaList as $key => $pizzaRow) {
+    $title = '<h4>Datensatz ' . ($key + 1) . ' aus Liste</h4>';
+    Debug::dump($pizzaRow->getArrayCopy(), $title);
+}
+?>
+</div>
+</div>

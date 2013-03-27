@@ -1,0 +1,80 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 10
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 10.5 view script
+ * 
+ * @package    Application
+ */
+?>
+<div class="row">
+<div class="span9">
+<h1>Listing 10.5</h1>
+<h3>Schreibende Anfragen mit Datenbankadapter</h3>
+<pre>
+&lt;?php
+use Zend\Db\Adapter\Adapter;
+use Zend\Debug\Debug;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$name  = $db->getPlatform()->quoteValue('Pizzaboden aus Dinkelmehl');
+$costs = $db->getPlatform()->quoteValue(2.5);
+
+$insertSql = 'INSERT INTO crusts (name, costs) VALUES(' . $name . ', ' . $costs . ')';
+
+$result = $db->query($insertSql, Adapter::QUERY_MODE_EXECUTE);
+
+$id = $db->getDriver()->getLastGeneratedValue();
+
+Debug::dump($id);
+
+$deleteSql = 'DELETE FROM crusts WHERE id = ' . $id;
+
+$result = $db->query($deleteSql, Adapter::QUERY_MODE_EXECUTE);
+
+Debug::dump($result->getAffectedRows());
+</pre>
+<h3>Ausgabe</h3>
+<?php 
+use Zend\Db\Adapter\Adapter;
+use Zend\Debug\Debug;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$name  = $db->getPlatform()->quoteValue('Pizzaboden Dinkelmehl');
+$costs = $db->getPlatform()->quoteValue(2.5);
+
+$insertSql = 'INSERT INTO crusts (name, costs) VALUES(' . $name . ', ' . $costs . ')';
+
+$result = $db->query($insertSql, Adapter::QUERY_MODE_EXECUTE);
+
+$id = $db->getDriver()->getLastGeneratedValue();
+
+Debug::dump($id);
+
+$deleteSql = 'DELETE FROM crusts WHERE id = ' . $id;
+
+$result = $db->query($deleteSql, Adapter::QUERY_MODE_EXECUTE);
+
+Debug::dump($result->getAffectedRows());
+?>
+</div>
+</div>

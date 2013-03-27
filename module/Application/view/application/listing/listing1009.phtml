@@ -1,0 +1,86 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 10
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 10.9 view script
+ * 
+ * @package    Application
+ */
+?>
+<div class="row">
+<div class="span9">
+<h1>Listing 10.9</h1>
+<h3><code>SELECT</code>-Abfrage mit <code>JOIN</code> und Einsatz eines Statement-Objekts</h3>
+<pre>
+&lt;?php
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Sql;
+use Zend\Debug\Debug;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$sql = new Sql($db);
+$select = $sql->select();
+$select->from(array('p' => 'pizzas'));
+$select->columns(array('pizza_name' => 'name'));
+$select->join(array('p_t' => 'pizzas_toppings'), 'p.id = p_t.pizza_id', array());
+$select->join(array('t' => 'toppings'), 'p_t.topping_id = t.id', array('id', 'name', 'costs'));
+$select->where(array('p.id' => '13'));
+$select->order(array('t.name'  => 'ASC'));
+
+$selectStatement = $sql->prepareStatementForSqlObject($select);
+
+$result = $selectStatement->execute();
+
+Debug::dump($selectStatement->getSql());
+
+foreach ($result as $row) {
+    Debug::dump($row);
+}
+</pre>
+<h3>Ausgabe</h3>
+<?php 
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Sql;
+use Zend\Debug\Debug;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$sql = new Sql($db);
+$select = $sql->select();
+$select->from(array('p' => 'pizzas'));
+$select->columns(array('pizza_name' => 'name'));
+$select->join(array('p_t' => 'pizzas_toppings'), 'p.id = p_t.pizza_id', array());
+$select->join(array('t' => 'toppings'), 'p_t.topping_id = t.id', array('id', 'name', 'costs'));
+$select->where(array('p.id' => '13'));
+$select->order(array('t.name'  => 'ASC'));
+
+$selectStatement = $sql->prepareStatementForSqlObject($select);
+
+$result = $selectStatement->execute();
+
+Debug::dump($selectStatement->getSql());
+
+foreach ($result as $row) {
+    Debug::dump($row);
+}
+?>
+</div>
+</div>

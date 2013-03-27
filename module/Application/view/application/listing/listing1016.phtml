@@ -1,0 +1,100 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 10
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 10.16 view script
+ * 
+ * @package    Application
+ */
+?>
+<div class="row">
+<div class="span9">
+<h1>Listing 10.16</h1>
+<h3>Einsatz von <code>RowGateway</code> mit <code>save()</code> und <code>delete()</code></h3>
+<pre>
+&lt;?php
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\RowGateway\RowGateway;
+use Zend\Debug\Debug;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$toppingsRow = new RowGateway('id', 'toppings', $db);
+$toppingsRow->name  = 'Rucola';
+$toppingsRow->costs = 2.0;
+$toppingsRow->save();
+
+Debug::dump($toppingsRow->toArray());
+
+$id = $toppingsRow->id;
+
+$result = $db->query('SELECT * FROM toppings WHERE id = ' . $id, Adapter::QUERY_MODE_EXECUTE);
+
+$rowData = $result->current()->getArrayCopy();
+
+$toppingsRow = new RowGateway('id', 'toppings', $db);
+$toppingsRow->populate($rowData, true);
+$toppingsRow->costs = 2.5;
+$toppingsRow->save();
+
+Debug::dump($toppingsRow->toArray());
+
+$toppingsRow->delete();
+
+$result = $db->query('SELECT * FROM toppings WHERE id = ' . $id, Adapter::QUERY_MODE_EXECUTE);
+
+Debug::dump($result->count());
+</pre>
+<h3>Ausgabe</h3>
+<?php 
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\RowGateway\RowGateway;
+use Zend\Debug\Debug;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$toppingsRow = new RowGateway('id', 'toppings', $db);
+$toppingsRow->name  = 'Rucola';
+$toppingsRow->costs = 2.0;
+$toppingsRow->save();
+
+Debug::dump($toppingsRow->toArray());
+
+$id = $toppingsRow->id;
+
+$result = $db->query('SELECT * FROM toppings WHERE id = ' . $id, Adapter::QUERY_MODE_EXECUTE);
+
+$rowData = $result->current()->getArrayCopy();
+
+$toppingsRow = new RowGateway('id', 'toppings', $db);
+$toppingsRow->populate($rowData, true);
+$toppingsRow->costs = 2.5;
+$toppingsRow->save();
+
+Debug::dump($toppingsRow->toArray());
+
+$toppingsRow->delete();
+
+$result = $db->query('SELECT * FROM toppings WHERE id = ' . $id, Adapter::QUERY_MODE_EXECUTE);
+
+Debug::dump($result->count());
+?>
+</div>
+</div>

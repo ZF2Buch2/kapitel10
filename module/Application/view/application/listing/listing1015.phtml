@@ -1,0 +1,95 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 10
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 10.15 view script
+ * 
+ * @package    Application
+ */
+?>
+<div class="row">
+<div class="span9">
+<h1>Listing 10.15</h1>
+<h3><code>EventFeature</code> mit <code>TableGateway</code> und <code>LogListener</code> einsetzen</h3>
+<pre>
+&lt;?php
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\TableGateway\Feature\EventFeature;
+use Zend\Debug\Debug;
+use Pizza\Listener\LogListener;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$file = LUIGI_ROOT . '/data/log/tables.log';
+
+$eventFeature = new EventFeature();
+$eventFeature->getEventManager()->attach(new LogListener($file));
+
+$crustsTable = new TableGateway('crusts', $db, $eventFeature);
+
+$crustsTable->insert(array(
+    'name'  => 'Pizzaboden aus Dinkelmehl',
+    'costs' => 2.5,
+));
+
+$id = $db->getDriver()->getLastGeneratedValue();
+
+$crustsTable->delete(array(
+    'id' => $id
+));
+
+echo(implode('', file($file)));
+?>
+</pre>
+<h3>Ausgabe</h3>
+<pre>
+<?php 
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\TableGateway\Feature\EventFeature;
+use Zend\Debug\Debug;
+use Pizza\Listener\LogListener;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$file = LUIGI_ROOT . '/data/log/tables.log';
+
+$eventFeature = new EventFeature();
+$eventFeature->getEventManager()->attach(new LogListener($file));
+
+$crustsTable = new TableGateway('crusts', $db, $eventFeature);
+
+$crustsTable->insert(array(
+    'name'  => 'Pizzaboden aus Dinkelmehl',
+    'costs' => 2.5,
+));
+
+$id = $db->getDriver()->getLastGeneratedValue();
+
+$crustsTable->delete(array(
+    'id' => $id
+));
+
+echo(implode('', file($file)));
+?>
+</pre>
+</div>
+</div>

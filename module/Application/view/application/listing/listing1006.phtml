@@ -1,0 +1,85 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 10
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 10.6 view script
+ * 
+ * @package    Application
+ */
+?>
+<div class="row">
+<div class="span9">
+<h1>Listing 10.6</h1>
+<h3>Entität für Pizzaböden</h3>
+<pre>
+&lt;?php
+namespace Pizza\Entity;
+
+use Zend\Stdlib\ArraySerializableInterface;
+
+class CrustEntity implements ArraySerializableInterface
+{
+    protected $id;
+    protected $name;
+    protected $costs;
+    
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    
+    public function getName()
+    {
+        return $this->name;
+    }
+    
+    public function setCosts($costs)
+    {
+        $this->costs = $costs;
+    }
+    
+    public function getCosts()
+    {
+        return round($this->costs, 2);
+    }
+    
+    public function exchangeArray(array $array)
+    {
+        $this->setId($array['id']);
+        $this->setName($array['name']);
+        $this->setCosts($array['costs']);
+    }
+    
+    public function getArrayCopy()
+    {
+        return array(
+            'id'    => $this->getId(),
+            'name'  => $this->getName(),
+            'costs' => $this->getCosts(),
+        );
+    }
+}
+</pre>
+</div>
+</div>

@@ -1,0 +1,80 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 10
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 10.7 view script
+ * 
+ * @package    Application
+ */
+?>
+<div class="row">
+<div class="span9">
+<h1>Listing 10.7</h1>
+<h3><code>CrustEntity</code> als ResultSet für Abfrage zurückerhalten</h3>
+<pre>
+&lt;?php
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Debug\Debug;
+use Zend\Stdlib\Hydrator\Reflection as ReflectionHydrator;
+use Pizza\Entity\CrustEntity;
+
+$resultSetPrototype = new HydratingResultSet(
+    new ReflectionHydrator, new CrustEntity()
+);
+
+$db = new Adapter(
+    array(
+        'driver'   => 'Pdo_Sqlite',
+        'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+    ), 
+    null, 
+    $resultSetPrototype
+);
+
+$result = $db->query('SELECT * FROM crusts;', Adapter::QUERY_MODE_EXECUTE);
+
+foreach ($result as $row) {
+    Debug::dump($row);
+}
+</pre>
+<h3>Ausgabe</h3>
+<?php 
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Debug\Debug;
+use Zend\Stdlib\Hydrator\Reflection as ReflectionHydrator;
+use Pizza\Entity\CrustEntity;
+
+$resultSetPrototype = new HydratingResultSet(
+    new ReflectionHydrator, new CrustEntity()
+);
+
+$db = new Adapter(
+    array(
+        'driver'   => 'Pdo_Sqlite',
+        'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+    ), 
+    null, 
+    $resultSetPrototype
+);
+
+$result = $db->query('SELECT * FROM crusts;', Adapter::QUERY_MODE_EXECUTE);
+
+foreach ($result as $row) {
+    Debug::dump($row);
+}
+?>
+</div>
+</div>

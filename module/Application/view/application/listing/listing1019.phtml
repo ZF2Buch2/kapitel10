@@ -1,0 +1,43 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 10
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 10.19 view script
+ * 
+ * @package    Application
+ */
+
+?>
+<div class="row">
+<div class="span9">
+<h1>Listing 10.19</h1>
+<h3>Konfiguration der Doctrine 2 Verbindung in <code>global.php</code></h3>
+<pre>
+&lt;?php
+return array(
+    [...]
+    'doctrine' => array(
+        'connection' => array(
+            'orm_default' => array(
+                'driverClass' => 'Doctrine\DBAL\Driver\PDOSqlite\Driver',
+                'params' => array(
+                    'path' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+                )
+            )
+        )
+    ),
+);
+</pre>
+</div>
+</div>

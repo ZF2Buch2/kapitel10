@@ -1,0 +1,108 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 10
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 10.11 view script
+ * 
+ * @package    Application
+ */
+?>
+<div class="row">
+<div class="span9">
+<h1>Listing 10.11</h1>
+<h3>Schreibende Abfragen mit <code>Zend\Db\Sql</code> generieren</h3>
+<pre>
+&lt;?php
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Sql;
+use Zend\Debug\Debug;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$sql = new Sql($db);
+
+$insert = $sql->insert('crusts');
+$insert->columns(array('name', 'costs'));
+$insert->values(array(
+    'name'  => 'Pizzaboden aus Dnikelmehl',
+    'costs' => 2.5,
+));
+
+$db->query($insert->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+
+$id = $db->getDriver()->getLastGeneratedValue();
+
+$update = $sql->update('crusts');
+$update->set(array(
+    'name'  => 'Pizzaboden aus Dinkelmehl',
+));
+$update->where->equalTo('id', $id);
+
+$db->query($update->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+
+$delete = $sql->delete('crusts');
+$delete->where->equalTo('id', $id);
+
+$db->query($delete->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+
+Debug::dump($insert->getSqlString());
+Debug::dump($update->getSqlString());
+Debug::dump($delete->getSqlString());
+</pre>
+<h3>Ausgabe</h3>
+<?php 
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Sql;
+use Zend\Debug\Debug;
+
+$db = new Adapter(array(
+    'driver'   => 'Pdo_Sqlite',
+    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
+));
+
+$sql = new Sql($db);
+
+$insert = $sql->insert('crusts');
+$insert->columns(array('name', 'costs'));
+$insert->values(array(
+    'name'  => 'Pizzaboden aus Dnikelmehl',
+    'costs' => 2.5,
+));
+
+$db->query($insert->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+
+$id = $db->getDriver()->getLastGeneratedValue();
+
+$update = $sql->update('crusts');
+$update->set(array(
+    'name'  => 'Pizzaboden aus Dinkelmehl',
+));
+$update->where->equalTo('id', $id);
+
+$db->query($update->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+
+$delete = $sql->delete('crusts');
+$delete->where->equalTo('id', $id);
+
+$db->query($delete->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+
+Debug::dump($insert->getSqlString());
+Debug::dump($update->getSqlString());
+Debug::dump($delete->getSqlString());
+?>
+</div>
+</div>
