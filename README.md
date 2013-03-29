@@ -1,8 +1,8 @@
 ZF2 Buch - Kapitel 10
 =====================
 
-Die Projektdateien für das Kapitel 10 vom Buch "Zend Framework 2 - Von den 
-Grundlagen bis zur fertigen Anwendung" (ISBN 978-3-8273-2994-3) von Ralf Eggert 
+Die Projektdateien für das Kapitel 10 vom Buch **Zend Framework 2 - Von den 
+Grundlagen bis zur fertigen Anwendung** (*ISBN 978-3-8273-2994-3*) von Ralf Eggert 
 aus dem Addison-Wesley Verlag installieren Sie wie folgt:
 
 * Sie können die Projektdateien als ZIP von der Website http://www.awl.de/2994 
@@ -48,8 +48,8 @@ aus dem Addison-Wesley Verlag installieren Sie wie folgt:
     </VirtualHost>
 ```
   Weitere Details zum Einrichten des Virtual Hosts entnehmen Sie bitte den 
-  Kapiteln "3.1.4 Virtual Host einrichten unter Linux" und "3.1.5 Virtual Host 
-  einrichten unter Windows"
+  Kapiteln *3.1.4 Virtual Host einrichten unter Linux* und *3.1.5 Virtual Host 
+  einrichten unter Windows*
   
 * Nun sollten Sie das Projekt unter http://luigis-pizza.local in Ihrem Browser 
   aufrufen können.
