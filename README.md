@@ -12,12 +12,14 @@ aus dem Addison-Wesley Verlag installieren Sie wie folgt:
   
 * Alternativ wechseln Sie ins Verzeichnis /home/devhost/zf2buch/ und clonen das
   GitHub Repository entsprechend, z.B.
+
     $ cd /home/devhost/zf2buch/
     $ git clone https://github.com/ZF2Buch/kapitel10.git
     $ cd kapitel10/
   
 * Nun aktualisieren Sie den Composer und installieren das Projekt inklusive
   aller Abhängigkeiten
+
     $ php composer.phar selfupdate
     $ php composer.phar install
 
