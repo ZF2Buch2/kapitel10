@@ -8,11 +8,12 @@ aus dem Addison-Wesley Verlag installieren Sie wie folgt:
 * Sie können die Projektdateien als ZIP von der Website http://www.awl.de/2994 
   unter Downloads oder von GitHub https://github.com/ZF2Buch/kapitel10 herunter
   laden und in einem geeigneten Verzeichnis entpacken, z.B.
+```
   /home/devhost/zf2buch/kapitel10
+```
   
 * Alternativ wechseln Sie ins Verzeichnis /home/devhost/zf2buch/ und clonen das
   GitHub Repository entsprechend, z.B.
-
 ```
     $ cd /home/devhost/zf2buch/
     $ git clone https://github.com/ZF2Buch/kapitel10.git
@@ -21,7 +22,6 @@ aus dem Addison-Wesley Verlag installieren Sie wie folgt:
   
 * Nun aktualisieren Sie den Composer und installieren das Projekt inklusive
   aller Abhängigkeiten
-
 ```
     $ php composer.phar selfupdate
     $ php composer.phar install
