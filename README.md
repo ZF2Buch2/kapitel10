@@ -60,11 +60,9 @@ Hinweise zum Zend Framework Release 2.1.4
 Durch Änderungen in der Zend\Db Komponente kann es in einige der Listings zu 
 folgenden Notices kommen:
 
-   Notice: Attempting to quote a value in `Zend\Db\Adapter\Platform\Sqlite` 
-   without extension/driver support can introduce security vulnerabilities 
-   in a production environment. in `/home/devhost/zf2buch/kapitel10/vendor/zendframework/zendframework/library/Zend/Db/Adapter/Platform/Sqlite.php` 
-   on line 118
+* Notice: Attempting to quote a value in `Zend\Db\Adapter\Platform\Sqlite` 
+  without extension/driver support can introduce security vulnerabilities 
+  in a production environment. in `/home/devhost/zf2buch/kapitel10/vendor/zendframework/zendframework/library/Zend/Db/Adapter/Platform/Sqlite.php` 
+  on line 118
    
-   https://github.com/zendframework/zf2/pull/4078
-   
-Dieser Bug sollte im Release 2.1.5 bereinigt sein.
+  Dieser Bug https://github.com/zendframework/zf2/pull/4078 sollte im Release 2.1.5 bereinigt sein.
