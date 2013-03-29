@@ -64,6 +64,7 @@ folgenden Notices kommen:
    without extension/driver support can introduce security vulnerabilities 
    in a production environment. in `/home/devhost/zf2buch/kapitel10/vendor/zendframework/zendframework/library/Zend/Db/Adapter/Platform/Sqlite.php` 
    on line 118
+   
    https://github.com/zendframework/zf2/pull/4078
    
 Dieser Bug sollte im Release 2.1.5 bereinigt sein.
