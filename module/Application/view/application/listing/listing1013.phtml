@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 10
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,74 +21,84 @@
 <div class="row">
 <div class="span9">
 <h1>Listing 10.13</h1>
-<h3>Einsatz von <code>TableGateway</code> mit <code>insert()</code> und <code>delete()</code></h3>
+<h3>Einsatz von <code>TableGateway</code> mit <code>select()</code> und <code>selectWith()</code></h3>
 <pre>
 &lt;?php
 use Zend\Db\Adapter\Adapter;
+use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Debug\Debug;
+use Pizza\Entity\ToppingEntity;
 
 $db = new Adapter(array(
     'driver'   => 'Pdo_Sqlite',
     'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
 ));
 
-$crustsTable = new TableGateway('crusts', $db);
+$resultSetPrototype = new ResultSet(
+    ResultSet::TYPE_ARRAYOBJECT, new ToppingEntity()
+);
 
-$crustsTable->insert(array(
-    'name'  => 'Pizzaboden aus Dinkelmehl',
-    'costs' => 2.5,
-));
+$toppingsTable = new TableGateway('toppings', $db, null, $resultSetPrototype);
 
-$id = $db->getDriver()->getLastGeneratedValue();
-
-$rows = $crustsTable->select(array(
-    'id' => $id
-));
+$rows = $toppingsTable->select(array('costs' => 1.5));
 
 foreach ($rows as $row) {
     Debug::dump($row->getArrayCopy());
 }
 
-$crustsTable->delete(array(
-    'id' => $id
-));
+echo '&lt;hr /&gt;';
 
-$rows = $crustsTable->select(array('id' => $id));
+$select = $toppingsTable->getSql()->select();
+$select->where->greaterThanOrEqualTo('costs', 1.5);
+$select->where->like('name', '%a%');
+$select->where->in('id', array(10, 12, 5, 6));
+$select->order(array('name'  => 'DESC'));
+
+$rows = $toppingsTable->selectWith($select);
+
+foreach ($rows as $row) {
+    Debug::dump($row->getArrayCopy());
+}
 </pre>
 <h3>Ausgabe</h3>
 <?php 
 use Zend\Db\Adapter\Adapter;
+use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Debug\Debug;
+use Pizza\Entity\ToppingEntity;
 
 $db = new Adapter(array(
     'driver'   => 'Pdo_Sqlite',
     'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
 ));
 
-$crustsTable = new TableGateway('crusts', $db);
+$resultSetPrototype = new ResultSet(
+    ResultSet::TYPE_ARRAYOBJECT, new ToppingEntity()
+);
 
-$crustsTable->insert(array(
-    'name'  => 'Pizzaboden aus Dinkelmehl',
-    'costs' => 2.5,
-));
+$toppingsTable = new TableGateway('toppings', $db, null, $resultSetPrototype);
 
-$id = $db->getDriver()->getLastGeneratedValue();
-
-$rows = $crustsTable->select(array(
-    'id' => $id
-));
+$rows = $toppingsTable->select(array('costs' => 1.5));
 
 foreach ($rows as $row) {
     Debug::dump($row->getArrayCopy());
 }
 
-$crustsTable->delete(array(
-    'id' => $id
-));
+echo '<hr />';
 
-$rows = $crustsTable->select(array('id' => $id));
+$select = $toppingsTable->getSql()->select();
+$select->where->greaterThanOrEqualTo('costs', 1.5);
+$select->where->like('name', '%a%');
+$select->where->in('id', array(10, 12, 5, 6));
+$select->order(array('name'  => 'DESC'));
+
+$rows = $toppingsTable->selectWith($select);
+
+foreach ($rows as $row) {
+    Debug::dump($row->getArrayCopy());
+}
 ?>
 </div>
 </div>

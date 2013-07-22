@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 10
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -22,100 +22,29 @@
 <div class="row">
 <div class="span9">
 <h1>Listing 10.21</h1>
-<h3><code>PizzaEntity</code> Klasse für den Einsatz mit Doctrine 2</h3>
+<h3>Doctrine 2 Konfiguration für <code>Pizza</code> Modul</h3>
 <pre>
 &lt;?php
-namespace Pizza\Doctrine;
+namespace Pizza;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * Pizza entity
- *
- * @package Pizza
- *         
- * @ORM\Entity
- * @ORM\Table(name="pizzas")
- * @property string $name
- * @property string $price
- * @property int $id
- */
-class PizzaEntity
-{
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer");
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+return array(
+    [...]
     
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $name;
-    
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $price;
-    
-    /**
-     * @ORM\OneToOne(targetEntity="CrustEntity")
-     * @ORM\JoinColumn(name="crust_id", referencedColumnName="id")
-     **/
-    private $crust;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="ToppingEntity")
-     * @ORM\JoinTable(name="pizzas_toppings",
-     *      joinColumns={
-     *          @ORM\JoinColumn(name="pizza_id", referencedColumnName="id")
-     *      },
-     *      inverseJoinColumns={
-     *          @ORM\JoinColumn(
-     *              name="topping_id", referencedColumnName="id", unique=true
-     *          )
-     *      }
-     * )
-     **/
-    private $toppings;
-    
-    public function __get ($property)
-    {
-        return $this->$property;
-    }
-
-    public function __set ($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    public function getArrayCopy ()
-    {
-        $data = array(
-            'id'       => $this->id,
-            'name'     => $this->name,
-            'price'    => $this->price,
-            'crust'    => $this->crust->getArrayCopy(),
-            'toppings' => array(),
-        );
-        
-        foreach ($this->toppings as $topping) {
-            $data['toppings'][] = $topping->getArrayCopy();
-        }
-        
-        return $data;
-    }
-
-    public function populate ($data = array())
-    {
-        $this->id       = $data['id'      ];
-        $this->name     = $data['name'    ];
-        $this->price    = $data['price'   ];
-        $this->crust    = $data['crust'   ];
-        $this->toppings = $data['toppings'];
-    }
-}
+    'doctrine' => array(
+        'driver' => array(
+            __NAMESPACE__ . '_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/' . __NAMESPACE__ . '/Doctrine')
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    __NAMESPACE__ . '\Doctrine' => __NAMESPACE__ . '_driver',
+                )
+            )
+        )
+    )
+);
 </pre>
 </div>
 </div>

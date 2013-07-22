@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 10
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,84 +21,92 @@
 <div class="row">
 <div class="span9">
 <h1>Listing 10.12</h1>
-<h3>Einsatz von <code>TableGateway</code> mit <code>select()</code> und <code>selectWith()</code></h3>
+<h3>Tabellen anlegen, ändern und löschen mit <code>Zend\Db\Sql\Ddl</code> generieren</h3>
 <pre>
 &lt;?php
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
 use Zend\Debug\Debug;
-use Pizza\Entity\ToppingEntity;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Ddl\Column\Char;
+use Zend\Db\Sql\Ddl\Column\Date;
+use Zend\Db\Sql\Ddl\Column\Float;
+use Zend\Db\Sql\Ddl\Column\Integer;
+use Zend\Db\Sql\Ddl\Column\Varchar;
+use Zend\Db\Sql\Ddl\Constraint\PrimaryKey;
+use Zend\Db\Sql\Ddl\AlterTable;
+use Zend\Db\Sql\Ddl\CreateTable;
+use Zend\Db\Sql\Ddl\DropTable;
 
 $db = new Adapter(array(
     'driver'   => 'Pdo_Sqlite',
     'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
 ));
 
-$resultSetPrototype = new ResultSet(
-    ResultSet::TYPE_ARRAYOBJECT, new ToppingEntity()
-);
+$columnId   = new Integer('id');
+$columnDate = new Date('created');
+$columnSum  = new Float('sum', 6, 2);
+$columnCode = new Char('code', 3);
+$columnName = new Varchar('name', 64);
+$primary    = new PrimaryKey('id');
 
-$toppingsTable = new TableGateway('toppings', $db, null, $resultSetPrototype);
+$create = new CreateTable('orders');
+$create->addColumn($columnId);
+$create->addColumn($columnDate);
+$create->addColumn($columnSum);
+$create->addColumn($columnCode);
 
-$rows = $toppingsTable->select(array('costs' => 1.5));
+$alter = new AlterTable('orders');
+$alter->addColumn($columnName);
+$alter->addConstraint($primary);
+$alter->dropColumn('code');
 
-foreach ($rows as $row) {
-    Debug::dump($row->getArrayCopy());
-}
+$drop = new DropTable('orders');
 
-echo '&lt;hr /&gt;';
-
-$select = $toppingsTable->getSql()->select();
-$select->where->greaterThanOrEqualTo('costs', 1.5);
-$select->where->like('name', '%a%');
-$select->where->in('id', array(10, 12, 5, 6));
-$select->order(array('name'  => 'DESC'));
-
-$rows = $toppingsTable->selectWith($select);
-
-foreach ($rows as $row) {
-    Debug::dump($row->getArrayCopy());
-}
+Debug::dump($create->getSqlString());
+Debug::dump($alter->getSqlString());
+Debug::dump($drop->getSqlString());
 </pre>
 <h3>Ausgabe</h3>
 <?php 
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
 use Zend\Debug\Debug;
-use Pizza\Entity\ToppingEntity;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Ddl\Column\Char;
+use Zend\Db\Sql\Ddl\Column\Date;
+use Zend\Db\Sql\Ddl\Column\Float;
+use Zend\Db\Sql\Ddl\Column\Integer;
+use Zend\Db\Sql\Ddl\Column\Varchar;
+use Zend\Db\Sql\Ddl\Constraint\PrimaryKey;
+use Zend\Db\Sql\Ddl\AlterTable;
+use Zend\Db\Sql\Ddl\CreateTable;
+use Zend\Db\Sql\Ddl\DropTable;
 
 $db = new Adapter(array(
     'driver'   => 'Pdo_Sqlite',
     'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
 ));
 
-$resultSetPrototype = new ResultSet(
-    ResultSet::TYPE_ARRAYOBJECT, new ToppingEntity()
-);
+$columnId   = new Integer('id');
+$columnDate = new Date('created');
+$columnSum  = new Float('sum', 6, 2);
+$columnCode = new Char('code', 3);
+$columnName = new Varchar('name', 64);
+$primary    = new PrimaryKey('id');
 
-$toppingsTable = new TableGateway('toppings', $db, null, $resultSetPrototype);
+$create = new CreateTable('orders');
+$create->addColumn($columnId);
+$create->addColumn($columnDate);
+$create->addColumn($columnSum);
+$create->addColumn($columnCode);
 
-$rows = $toppingsTable->select(array('costs' => 1.5));
+$alter = new AlterTable('orders');
+$alter->addColumn($columnName);
+$alter->addConstraint($primary);
+$alter->dropColumn('code');
 
-foreach ($rows as $row) {
-    Debug::dump($row->getArrayCopy());
-}
+$drop = new DropTable('orders');
 
-echo '<hr />';
-
-$select = $toppingsTable->getSql()->select();
-$select->where->greaterThanOrEqualTo('costs', 1.5);
-$select->where->like('name', '%a%');
-$select->where->in('id', array(10, 12, 5, 6));
-$select->order(array('name'  => 'DESC'));
-
-$rows = $toppingsTable->selectWith($select);
-
-foreach ($rows as $row) {
-    Debug::dump($row->getArrayCopy());
-}
+Debug::dump($create->getSqlString());
+Debug::dump($alter->getSqlString());
+Debug::dump($drop->getSqlString());
 ?>
 </div>
 </div>

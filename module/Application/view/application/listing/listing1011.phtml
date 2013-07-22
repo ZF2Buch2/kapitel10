@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 10
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -42,7 +42,7 @@ $insert->values(array(
     'costs' => 2.5,
 ));
 
-$db->query($insert->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+$db->query($sql->getSqlStringForSqlObject($insert), Adapter::QUERY_MODE_EXECUTE);
 
 $id = $db->getDriver()->getLastGeneratedValue();
 
@@ -52,16 +52,16 @@ $update->set(array(
 ));
 $update->where->equalTo('id', $id);
 
-$db->query($update->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+$db->query($sql->getSqlStringForSqlObject($update), Adapter::QUERY_MODE_EXECUTE);
 
 $delete = $sql->delete('crusts');
 $delete->where->equalTo('id', $id);
 
-$db->query($delete->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+$db->query($sql->getSqlStringForSqlObject($delete), Adapter::QUERY_MODE_EXECUTE);
 
-Debug::dump($insert->getSqlString());
-Debug::dump($update->getSqlString());
-Debug::dump($delete->getSqlString());
+Debug::dump($sql->getSqlStringForSqlObject($insert));
+Debug::dump($sql->getSqlStringForSqlObject($update));
+Debug::dump($sql->getSqlStringForSqlObject($delete));
 </pre>
 <h3>Ausgabe</h3>
 <?php 
@@ -83,26 +83,26 @@ $insert->values(array(
     'costs' => 2.5,
 ));
 
-$db->query($insert->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+$db->query($sql->getSqlStringForSqlObject($insert), Adapter::QUERY_MODE_EXECUTE);
 
 $id = $db->getDriver()->getLastGeneratedValue();
 
 $update = $sql->update('crusts');
 $update->set(array(
-    'name'  => 'Pizzaboden aus Dinkelmehl',
+        'name'  => 'Pizzaboden aus Dinkelmehl',
 ));
 $update->where->equalTo('id', $id);
 
-$db->query($update->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+$db->query($sql->getSqlStringForSqlObject($update), Adapter::QUERY_MODE_EXECUTE);
 
 $delete = $sql->delete('crusts');
 $delete->where->equalTo('id', $id);
 
-$db->query($delete->getSqlString(), Adapter::QUERY_MODE_EXECUTE);
+$db->query($sql->getSqlStringForSqlObject($delete), Adapter::QUERY_MODE_EXECUTE);
 
-Debug::dump($insert->getSqlString());
-Debug::dump($update->getSqlString());
-Debug::dump($delete->getSqlString());
+Debug::dump($sql->getSqlStringForSqlObject($insert));
+Debug::dump($sql->getSqlStringForSqlObject($update));
+Debug::dump($sql->getSqlStringForSqlObject($delete));
 ?>
 </div>
 </div>

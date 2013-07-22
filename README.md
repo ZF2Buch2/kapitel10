@@ -1,13 +1,12 @@
 ZF2 Buch - Kapitel 10
 =====================
 
-Die Projektdateien für das Kapitel 10 vom Buch **Zend Framework 2 - Von den 
-Grundlagen bis zur fertigen Anwendung** (*ISBN 978-3-8273-2994-3*) von Ralf Eggert 
-aus dem Addison-Wesley Verlag installieren Sie wie folgt:
+Die Projektdateien für das Kapitel 10 vom Buch **Zend Framework 2 - Das
+Praxisbuch** (*ISBN 978-3-8362-2610-3*) von Ralf Eggert 
+aus dem Galileo-Computing Verlag installieren Sie wie folgt:
 
-* Sie können die Projektdateien als ZIP von der Website http://www.awl.de/2994 
-  unter Downloads oder von GitHub https://github.com/ZF2Buch/kapitel10 herunter
-  laden und in einem geeigneten Verzeichnis entpacken, z.B.
+* Sie können die Projektdateien von https://github.com/ZF2Buch2/kapitel10 als  
+  ZIP herunter laden und in einem geeigneten Verzeichnis entpacken, z.B.
 ```
   /home/devhost/zf2buch/kapitel10
 ```
@@ -16,7 +15,7 @@ aus dem Addison-Wesley Verlag installieren Sie wie folgt:
   GitHub Repository entsprechend, z.B.
 ```
     $ cd /home/devhost/zf2buch/
-    $ git clone https://github.com/ZF2Buch/kapitel10.git
+    $ git clone https://github.com/ZF2Buch2/kapitel10.git
     $ cd kapitel10/
 ```
   
@@ -65,4 +64,4 @@ folgenden Notices kommen:
   in a production environment. in `/home/devhost/zf2buch/kapitel10/vendor/zendframework/zendframework/library/Zend/Db/Adapter/Platform/Sqlite.php` 
   on line 118
    
-  Dieser Bug https://github.com/zendframework/zf2/pull/4078 sollte im Release 2.1.5 bereinigt sein.
+  Dieser Bug https://github.com/zendframework/zf2/pull/4078 sollte in zukünftigen Releases bereinigt sein.

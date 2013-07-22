@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 10
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,75 +21,81 @@
 <div class="row">
 <div class="span9">
 <h1>Listing 10.15</h1>
-<h3><code>EventFeature</code> mit <code>TableGateway</code> und <code>LogListener</code> einsetzen</h3>
+<h3><code>LogListener</code> zum Loggen der <code>TableGateway</code> Events</h3>
 <pre>
 &lt;?php
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\TableGateway\Feature\EventFeature;
-use Zend\Debug\Debug;
-use Pizza\Listener\LogListener;
+namespace Pizza\Listener;
 
-$db = new Adapter(array(
-    'driver'   => 'Pdo_Sqlite',
-    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
-));
+use Zend\Db\TableGateway\Feature\EventFeature\TableGatewayEvent;
+use Zend\EventManager\EventInterface;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
+use Zend\Log\Logger;
+use Zend\Log\Writer\Stream;
 
-$file = LUIGI_ROOT . '/data/log/tables.log';
+class LogListener implements ListenerAggregateInterface
+{
+    protected $logger = null;
 
-$eventFeature = new EventFeature();
-$eventFeature->getEventManager()->attach(new LogListener($file));
+    protected $listeners = array();
 
-$crustsTable = new TableGateway('crusts', $db, $eventFeature);
+    public function __construct($file)
+    {
+        $this->logger = new Logger();
+        $this->logger->addWriter(new Stream($file));
+    }
+    
+    public function attach(EventManagerInterface $events)
+    {
+        $this->listeners[] = $events->attach('postInitialize', array($this, 'logPostInitialize'));
+        $this->listeners[] = $events->attach('postInsert', array($this, 'logPostInsert'));
+        $this->listeners[] = $events->attach('postDelete', array($this, 'logPostDelete'));
+    }
 
-$crustsTable->insert(array(
-    'name'  => 'Pizzaboden aus Dinkelmehl',
-    'costs' => 2.5,
-));
+    public function detach(EventManagerInterface $events)
+    {
+        foreach ($this->listeners as $index => $listener) {
+            if ($events->detach($listener)) {
+                unset($this->listeners[$index]);
+            }
+        }
+    }
 
-$id = $db->getDriver()->getLastGeneratedValue();
+    public function logPostInitialize(TableGatewayEvent $e)
+    {
+        $this->logger->log(
+            Logger::INFO, 
+            'TableGateway für Tabelle "' . $e->getTarget()->getTable() 
+                . '" initialisiert'
+        );
+    }
 
-$crustsTable->delete(array(
-    'id' => $id
-));
+    public function logPostInsert(TableGatewayEvent $e)
+    {
+        $driver = $e->getTarget()->getAdapter()->getDriver();
+        $params = $e->getParam('statement')->getParameterContainer();
+        $id     = $driver->getLastGeneratedValue();
+        
+        $this->logger->log(
+            Logger::INFO, 
+            '"' . $params->offsetGet('name') . '" mit ID "' . $id 
+                . '" in Tabelle "' . $e->getTarget()->getTable() 
+                . '" eingefügt'
+        );
+    }
 
-echo(implode('', file($file)));
-?>
-</pre>
-<h3>Ausgabe</h3>
-<pre>
-<?php 
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\TableGateway\Feature\EventFeature;
-use Zend\Debug\Debug;
-use Pizza\Listener\LogListener;
-
-$db = new Adapter(array(
-    'driver'   => 'Pdo_Sqlite',
-    'database' => LUIGI_ROOT . '/data/db/pizza.sqlite3.db',
-));
-
-$file = LUIGI_ROOT . '/data/log/tables.log';
-
-$eventFeature = new EventFeature();
-$eventFeature->getEventManager()->attach(new LogListener($file));
-
-$crustsTable = new TableGateway('crusts', $db, $eventFeature);
-
-$crustsTable->insert(array(
-    'name'  => 'Pizzaboden aus Dinkelmehl',
-    'costs' => 2.5,
-));
-
-$id = $db->getDriver()->getLastGeneratedValue();
-
-$crustsTable->delete(array(
-    'id' => $id
-));
-
-echo(implode('', file($file)));
-?>
+    public function logPostDelete(TableGatewayEvent $e)
+    {
+        $params = $e->getParam('statement')->getParameterContainer();
+        
+        $this->logger->log(
+            Logger::INFO, 
+            'Datensatz mit ID "' . $params->offsetGet('where1') 
+                . '" aus Tabelle "' . $e->getTarget()->getTable() 
+                . '" gelöscht'
+        );
+    }
+}
 </pre>
 </div>
 </div>
